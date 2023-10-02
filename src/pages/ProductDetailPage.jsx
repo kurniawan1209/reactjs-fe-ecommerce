@@ -5,7 +5,7 @@ import ProductDetail from '../components/ProductDetail';
 import { useParams, useNavigate } from 'react-router-dom';
 import { LoginValidation } from '../utils/loginValidation';
 import Breadcumb from '../components/Breadcumb';
-import ErrorBoundary from '../utils/ErrorBoundary';
+import RelatedProducts from '../components/RelatedProducts';
 
 
 const ProductDetailPage = () => {
@@ -27,6 +27,7 @@ const ProductDetailPage = () => {
             <Header />
             <Breadcumb />
             <ProductDetail id={id} />
+            <RelatedProducts id={id}/>
             <Footer />
         </>
     ) : null;

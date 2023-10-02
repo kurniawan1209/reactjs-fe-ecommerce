@@ -813,6 +813,10 @@ h1,
   --tw-ring-color: rgb(253 61 87 / var(--tw-ring-opacity));
 }
 
+.visible {
+  visibility: visible;
+}
+
 .static {
   position: static;
 }
@@ -1006,16 +1010,8 @@ h1,
   width: 3rem;
 }
 
-.w-3\/5 {
-  width: 60%;
-}
-
 .w-32 {
   width: 8rem;
-}
-
-.w-40 {
-  width: 10rem;
 }
 
 .w-44 {
@@ -1065,10 +1061,6 @@ h1,
 
 .table-auto {
   table-layout: auto;
-}
-
-.border-collapse {
-  border-collapse: collapse;
 }
 
 .origin-top-right {
@@ -1324,6 +1316,10 @@ h1,
   background-color: rgb(253 61 87 / var(--tw-bg-opacity));
 }
 
+.bg-transparent {
+  background-color: transparent;
+}
+
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -1412,16 +1408,6 @@ h1,
 .py-7 {
   padding-top: 1.75rem;
   padding-bottom: 1.75rem;
-}
-
-.py-14 {
-  padding-top: 3.5rem;
-  padding-bottom: 3.5rem;
-}
-
-.py-20 {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
 }
 
 .pb-12 {

@@ -14,6 +14,7 @@ const ProductDetail = (props) => {
     const [color, setColor] = useState([]);
     const [quantity, setQuantity] = useState(1);
     const [spesification, setSpesification] = useState();
+    const [mounted, setMounted] = useState(false);
 
     const handleQuantity = (process) => {
         if (process === "add" && quantity >= 1) {
@@ -23,14 +24,14 @@ const ProductDetail = (props) => {
         }
     }
 
-    const fetchData = () => {
-        const token = localStorage.getItem("access_token");
+    const fetchProductDetail = async () => {
         try {
+            const token = localStorage.getItem("access_token");
             const params = {
                 token: token,
                 product: props.id
             }
-            const products = getProducts(params);
+            const products = await getProducts(params);
             const images = products.data[0].details.filter((item) => {
                 return item.key.slice(0, 6) === "images";
             })
@@ -50,20 +51,22 @@ const ProductDetail = (props) => {
             setSize(Array.from(new Set(sizes)));
             setSpesification(Array.from(new Set(specs)));
 
+            setMounted(true);
+
         } catch (error) {
             console.log("ini error");
         }
     }
 
     useEffect(() => {
-        fetchData();
+        fetchProductDetail();
     }, []);
-    
-    return (
+
+    return mounted ? (
         <>
             <div className="container grid grid-cols-2 gap-6">
 
-                <div className="">
+                <div className="">  
                     <img src="http://127.0.0.1:9000/media/products/B08BLP231K/41OuvqjhaqL.jpg" alt="product" className="h-96 w-auto mx-auto py-16" />
                     <div className="grid grid-cols-5 gap-4 mt-4">
                         <div className="border border-primary">
@@ -203,7 +206,7 @@ const ProductDetail = (props) => {
             </div>
 
         </>
-    )
+    ) : null;
 }
 
 export default ProductDetail;

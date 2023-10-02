@@ -18,3 +18,21 @@ export function userServices(arg) {
     } 
     
 }
+
+
+export function userRegistration(arg) {
+    const url = BASE_URL + "/api/user/register/";
+    const headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    };
+    const user = {
+        "username": arg.username,
+        "password": arg.password,
+        "first_name": arg.first_name,
+        "last_name": arg.last_name,
+        "email": arg.email
+    }
+
+    return axios.post(url, user, {headers: headers})
+}

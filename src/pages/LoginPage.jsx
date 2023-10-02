@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { authLogin } from '../services/AuthServices';
+import { ThreeDots } from 'react-loader-spinner';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
 
@@ -7,8 +9,12 @@ export const LoginPage = () => {
         "username": "",
         "password": ""
     })
+    const [isLoading, setIsLoading] = useState(false);
+    const [disabled, setDisabled] = useState(false);
+    const [buttonClass, setButtonClass] = useState("flex w-full py-2 items-center justify-center text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium gap-2");
+    const navigate = useNavigate();
 
-    const handleOnChange = (e) => { 
+    const handleOnChange = (e) => {
         setCredential({
             ...credential,
             [e.target.name]: e.target.value
@@ -18,21 +24,35 @@ export const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const result = await authLogin(credential);
-        
-            localStorage.clear();
-            localStorage.setItem("access_token", result.data.access);
-            localStorage.setItem("refresh_token", result.data.refresh);
+            setIsLoading(true);
+            setButtonClass("flex w-full py-2 items-center justify-center border border-primary rounded bg-transparent text-primary transition uppercase font-roboto font-medium gap-2 disabled");
+            setDisabled(true);
 
-            window.location.href = '/';
+            await authLogin(credential)
+                .then(response => {
+                    localStorage.clear();
+                    localStorage.setItem("access_token", response.data.access);
+                    localStorage.setItem("refresh_token", response.data.refresh);
+
+                    setIsLoading(false);
+                    setButtonClass("flex w-full py-2 items-center justify-center text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium gap-2");
+                    alert("Login succesfull")
+                    setDisabled(false);
+
+                    navigate("/");
+                })
+                .error(response => {
+                    localStorage.clear();
+                });
+
 
         } catch (error) {
-            console.log(error);
+            localStorage.clear();
         }
     }
 
     useEffect(() => {
-        import('../assets/css/login.css').then(() => {});
+        import('../assets/css/login.css').then(() => { });
     }, [])
 
     return (
@@ -45,10 +65,10 @@ export const LoginPage = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="space-y-2">
                         <div>
-                            <label htmlFor="email" className="text-gray-600 mb-2 block">Email address</label>
+                            <label htmlFor="username" className="text-gray-600 mb-2 block">Email address</label>
                             <input type="text" name="username" id="username"
                                 className="block w-full border border-gray-300 px-4 py-3 text-gray-600 text-sm rounded focus:ring-0 focus:border-primary placeholder-gray-400"
-                                placeholder="john_doe3306" onChange={handleOnChange} />
+                                placeholder="john_doe3306" onChange={handleOnChange} autoComplete="username" />
                         </div>
                         <div>
                             <label htmlFor="password" className="text-gray-600 mb-2 block">Password</label>
@@ -62,13 +82,23 @@ export const LoginPage = () => {
                     </div>
                     <div className="mt-4">
                         <button type="submit"
-                            className="block w-full py-2 text-center text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium">Login</button>
+                            className={buttonClass} disabled={disabled}>
+                            Login
+                            {isLoading ?
+                                <ThreeDots
+                                    height="20"
+                                    width="40"
+                                    radius="6"
+                                    color="#fd3d57"
+                                    ariaLabel="three-dots-loading"
+                                    visible={true}
+                                /> : null}
+                        </button>
                     </div>
                 </form>
 
-                <p className="mt-4 text-center text-gray-600">Don't have account? <a href="register.html"
-                    className="text-primary">Register
-                    now</a></p>
+                <p className="mt-4 text-center text-gray-600">Don't have account?
+                    <a href="/register"className="text-primary">Register now</a></p>
             </div>
         </div>
     );
